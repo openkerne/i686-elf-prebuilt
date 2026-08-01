@@ -71,7 +71,8 @@ jobs:
             --prefix="$PREFIX" \
             --disable-nls \
             --enable-languages=c,c++,go \
-            --without-headers
+            --without-headers \
+            --disable-libgo
 
           make -j$(nproc)
 
