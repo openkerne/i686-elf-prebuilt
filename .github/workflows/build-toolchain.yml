@@ -76,9 +76,8 @@ jobs:
             --enable-languages=c,c++,go \
             --without-headers
 
-          make -j$(nproc)
-
-          make install DESTDIR=$PWD/install
+           make all-gcc -j$(nproc)
+           make install-gcc DESTDIR=$PWD/install
 
       - name: Create toolchain package
         run: |
