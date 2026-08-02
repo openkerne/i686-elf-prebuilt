@@ -74,8 +74,7 @@ jobs:
             --prefix="$PREFIX" \
             --disable-nls \
             --enable-languages=c,c++,go \
-            --without-headers \
-            --disable-libgo
+            --without-headers 
 
           make all-gcc -j"$(nproc)"
           sudo make install-gcc
