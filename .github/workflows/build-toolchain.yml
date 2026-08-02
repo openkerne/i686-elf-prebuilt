@@ -78,6 +78,8 @@ jobs:
 
            make all-gcc -j$(nproc)
            make install-gcc DESTDIR=$PWD/install
+           make all-target-libgcc -j$(nproc)
+           make install-target-libgcc DESTDIR=$PWD/install
 
       - name: Create toolchain package
         run: |
