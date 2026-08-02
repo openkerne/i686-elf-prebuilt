@@ -81,8 +81,10 @@ jobs:
 
           make all-target-libgcc -j"$(nproc)"
           sudo make install-target-libgcc
-
-      - name: Create toolchain package
+          make all-target-libgo -j$(nproc)
+          make install-target-libgo
+      
+        - name: Create toolchain package
         run: |
           mkdir -p release/toolchain
           cp -a /opt/cross/. release/toolchain/
