@@ -74,9 +74,9 @@ jobs:
             --without-headers \
             --disable-libgo
 
-             make all-gcc -j$(nproc)
+          make all-gcc -j$(nproc)
 
-             make install-gcc DESTDIR=$PWD/install
+          make install-gcc DESTDIR=$PWD/install
 
       - name: Create toolchain package
         run: |
