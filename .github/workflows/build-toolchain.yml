@@ -45,6 +45,11 @@ jobs:
           tar xf binutils-${BINUTILS_VERSION}.tar.xz
           tar xf gcc-${GCC_VERSION}.tar.xz
 
+      - name: Prepare GCC
+        run: |
+          cd gcc-${GCC_VERSION}
+          ./contrib/download_prerequisites
+
       - name: Build Binutils
         run: |
           mkdir binutils-build
@@ -56,13 +61,8 @@ jobs:
             --disable-nls \
             --disable-werror
 
-          make -j$(nproc)
-          make install DESTDIR=$PWD/install
-
-      - name: Prepare GCC
-        run: |
-          cd gcc-${GCC_VERSION}
-          ./contrib/download_prerequisites
+          make -j"$(nproc)"
+          sudo make install
 
       - name: Build GCC
         run: |
@@ -77,19 +77,18 @@ jobs:
             --without-headers \
             --disable-libgo
 
-           make all-gcc -j$(nproc)
-           make install-gcc DESTDIR=$PWD/install
-           make all-target-libgcc -j$(nproc)
-           make install-target-libgcc DESTDIR=$PWD/install
+          make all-gcc -j"$(nproc)"
+          sudo make install-gcc
+
+          make all-target-libgcc -j"$(nproc)"
+          sudo make install-target-libgcc
 
       - name: Create toolchain package
         run: |
           mkdir -p release/toolchain
+          cp -a /opt/cross/. release/toolchain/
 
-          cp -r binutils-build/install/opt/cross/* release/toolchain/
-          cp -r gcc-build/install/opt/cross/* release/toolchain/
-
-          tar -czvf \
+          tar -czf \
             ${TARGET}-toolchain.tar.gz \
             -C release \
             toolchain
@@ -104,7 +103,6 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            ${{ env.TARGET }}-toolchain.tar.gz
+          files: ${{ env.TARGET }}-toolchain.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
